@@ -5,45 +5,30 @@ import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/users")
-public class UserController {
-    private final Map<Integer, User> userMap = new HashMap<>();
-    private int id = 1;
+public class UserController extends Controller<User> {
 
+    @Override
     @PostMapping
-    public User addNewUser(@RequestBody User user) throws ValidationException {
-        user = userChecker(user);
-        final User newUser = user.toBuilder()
+    public User addNewElement(@RequestBody User element) throws ValidationException {
+        element = userChecker(element);
+        final User newUser = element.toBuilder()
                 .id(setId())
                 .build();
-        userMap.put(newUser.getId(), newUser);
+        dataMap.put(newUser.getId(), newUser);
         return newUser;
     }
 
+    @Override
     @PutMapping
-    public User updateUser(@RequestBody User user) throws ValidationException {
-        user = userChecker(user);
-        userIdChecker(user);
-        userMap.put(user.getId(), user);
-        return user;
+    public User updateElement(User element) throws ValidationException {
+        element = userChecker(element);
+        userIdChecker(element);
+        dataMap.put(element.getId(), element);
+        return element;
     }
-
-    @GetMapping
-    public List<User> getAllUsers() {
-        return new ArrayList<>(userMap.values());
-    }
-
-    private int setId() {
-        return id++;
-    }
-
-
     private void userIdChecker(User user) throws ValidationException {
         if (user.getId() < 1) {
             throw new ValidationException("id пользователя должен быть больше 1");
@@ -58,7 +43,8 @@ public class UserController {
             throw new ValidationException("Логин введена неверное");
 
         }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
+        if (user.getBirthday().isAfter(LocalDate.now()) ||
+                user.getBirthday().isBefore(user.getBirthday().minusYears(100))) {
             throw new ValidationException("Не все могут рождаться в завтрашнем дне, а точнее никто");
         }
         if (user.getName().isBlank()) {
@@ -68,5 +54,4 @@ public class UserController {
         }
         return user;
     }
-
 }
