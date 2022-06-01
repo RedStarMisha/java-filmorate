@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 
 @RestController
@@ -12,8 +13,8 @@ public class UserController extends Controller<User> {
 
     @PostMapping
     @Override
-    public User addNewElement(@RequestBody User element) throws ValidationException {
-        element = userChecker(element);
+    public User addNewElement(@RequestBody@Valid User element) throws ValidationException {
+        //element = userChecker(element);
         final User newUser = element.toBuilder()
                 .id(setId())
                 .build();
