@@ -11,10 +11,10 @@ public class Film {
     @PositiveOrZero
     @Max(Integer.MAX_VALUE)
     private final int id;
-    @NotBlank
-    @NotNull
+    @NotEmpty
     private final String name;
-    @NotNull
+    @NotEmpty
+    @Size(max = 200)
     private final String description;
     @PastOrPresent
     private final LocalDate releaseDate;

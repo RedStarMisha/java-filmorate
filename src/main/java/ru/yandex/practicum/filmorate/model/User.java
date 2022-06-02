@@ -11,16 +11,15 @@ import java.time.LocalDate;
 @Builder(toBuilder = true)
 public class User {
     @PositiveOrZero
+    @Max(Integer.MAX_VALUE)
     private final int id;
     @Email
     private final String email;
-    @NotBlank
-    @NotNull
+    @NotEmpty
+    @Pattern(message = "Не может содержать пробел",regexp = "\\w+")
     private final String login;
-    @NotBlank
-    @NotNull
     private final String name;
     @NotNull
-    @PastOrPresent
+    @Past
     private final LocalDate birthday;
 }

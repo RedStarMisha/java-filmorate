@@ -2,6 +2,9 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
@@ -55,7 +58,7 @@ class UserControllerTest extends UtilControllerTest<User> {
         ValidationException exception = assertThrows(
                 ValidationException.class,
                 () -> controller.addNewElement(element));
-        assertEquals(exception.getMessage(), "Логин введена неверное");
+        assertEquals(exception.getMessage(), "Не может содержать пробел");
     }
 
     @Test
@@ -80,6 +83,7 @@ class UserControllerTest extends UtilControllerTest<User> {
 
     @Test
     void shouldThrowExceptionWhenAddNewUserWithWrongEmail() {
+
         element = element.toBuilder()
                 .email("mailwithoutdog")
                 .build();
@@ -87,6 +91,7 @@ class UserControllerTest extends UtilControllerTest<User> {
                 ValidationException.class,
                 () -> controller.addNewElement(element));
         assertEquals(exception.getMessage(), "Почта введена неверно");
+
     }
 
     @Test
