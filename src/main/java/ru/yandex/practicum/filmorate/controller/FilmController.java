@@ -30,6 +30,7 @@ public class FilmController extends Controller<Film> {
         return super.addToMap(elementId, newFilm);
     }
 
+
     private void filmIdChecker(Film film) throws ValidationException {
         if (film.getId() < 1) {
             throw new ValidationException("id не может быть меньше 1");
