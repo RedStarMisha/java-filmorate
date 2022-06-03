@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
+import ru.yandex.practicum.filmorate.myvalidator.Date;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -16,7 +17,7 @@ public class Film {
     @NotEmpty
     @Size(max = 200)
     private final String description;
-    @PastOrPresent
+    @Date
     private final LocalDate releaseDate;
     @Positive
     @Max(2400)

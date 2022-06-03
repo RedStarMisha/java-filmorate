@@ -39,70 +39,70 @@ class UserControllerTest extends UtilControllerTest<User> {
         );
     }
 
-    @Test
-    void shouldThrowExceptionWhenAddNewUserWithEmptyLogin() {
-        element = element.toBuilder()
-                .login("")
-                .build();
-        ValidationException exception = assertThrows(
-                ValidationException.class,
-                () -> controller.addNewElement(element));
-        assertEquals(exception.getMessage(), "Логин введена неверное");
-    }
-
-    @Test
-    void shouldThrowExceptionWhenAddNewUserWithLoginContainsSpase() {
-        element = element.toBuilder()
-                .login(" Кононварвар")
-                .build();
-        ValidationException exception = assertThrows(
-                ValidationException.class,
-                () -> controller.addNewElement(element));
-        assertEquals(exception.getMessage(), "Не может содержать пробел");
-    }
-
-    @Test
-    void addNewUserWithEmptyName() throws ValidationException {
-        element = element.toBuilder()
-                .name("")
-                .build();
-        User addedUser = controller.addNewElement(element);
-        assertEquals(element.getLogin(), addedUser.getName());
-    }
-
-    @Test
-    void shouldThrowExceptionWhenAddNewUserWithEmptyEmail() {
-        element = element.toBuilder()
-                .email("")
-                .build();
-        ValidationException exception = assertThrows(
-                ValidationException.class,
-                () -> controller.addNewElement(element));
-        assertEquals(exception.getMessage(), "Почта введена неверно");
-    }
-
-    @Test
-    void shouldThrowExceptionWhenAddNewUserWithWrongEmail() {
-
-        element = element.toBuilder()
-                .email("mailwithoutdog")
-                .build();
-        ValidationException exception = assertThrows(
-                ValidationException.class,
-                () -> controller.addNewElement(element));
-        assertEquals(exception.getMessage(), "Почта введена неверно");
-
-    }
-
-    @Test
-    void shouldThrowExceptionWhenAddNewUserWithBirthdayInFuture() {
-        element = element.toBuilder()
-                .birthday(LocalDate.now().plusDays(1))
-                .build();
-        ValidationException exception = assertThrows(
-                ValidationException.class,
-                () -> controller.addNewElement(element));
-        assertEquals(exception.getMessage(), "Не все могут рождаться в завтрашнем дне, а точнее никто");
-    }
+//    @Test
+//    void shouldThrowExceptionWhenAddNewUserWithEmptyLogin() {
+//        element = element.toBuilder()
+//                .login("")
+//                .build();
+//        ValidationException exception = assertThrows(
+//                ValidationException.class,
+//                () -> controller.addNewElement(element));
+//        assertEquals(exception.getMessage(), "Логин введена неверное");
+//    }
+//
+//    @Test
+//    void shouldThrowExceptionWhenAddNewUserWithLoginContainsSpase() {
+//        element = element.toBuilder()
+//                .login(" Кононварвар")
+//                .build();
+//        ValidationException exception = assertThrows(
+//                ValidationException.class,
+//                () -> controller.addNewElement(element));
+//        assertEquals(exception.getMessage(), "Не может содержать пробел");
+//    }
+//
+//    @Test
+//    void addNewUserWithEmptyName() throws ValidationException {
+//        element = element.toBuilder()
+//                .name("")
+//                .build();
+//        User addedUser = controller.addNewElement(element);
+//        assertEquals(element.getLogin(), addedUser.getName());
+//    }
+//
+//    @Test
+//    void shouldThrowExceptionWhenAddNewUserWithEmptyEmail() {
+//        element = element.toBuilder()
+//                .email("")
+//                .build();
+//        ValidationException exception = assertThrows(
+//                ValidationException.class,
+//                () -> controller.addNewElement(element));
+//        assertEquals(exception.getMessage(), "Почта введена неверно");
+//    }
+//
+//    @Test
+//    void shouldThrowExceptionWhenAddNewUserWithWrongEmail() {
+//
+//        element = element.toBuilder()
+//                .email("mailwithoutdog")
+//                .build();
+//        ValidationException exception = assertThrows(
+//                ValidationException.class,
+//                () -> controller.addNewElement(element));
+//        assertEquals(exception.getMessage(), "Почта введена неверно");
+//
+//    }
+//
+//    @Test
+//    void shouldThrowExceptionWhenAddNewUserWithBirthdayInFuture() {
+//        element = element.toBuilder()
+//                .birthday(LocalDate.now().plusDays(1))
+//                .build();
+//        ValidationException exception = assertThrows(
+//                ValidationException.class,
+//                () -> controller.addNewElement(element));
+//        assertEquals(exception.getMessage(), "Не все могут рождаться в завтрашнем дне, а точнее никто");
+//    }
 
 }

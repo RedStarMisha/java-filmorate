@@ -18,7 +18,7 @@ public abstract class Controller<T> {
         return id++;
     }
 
-    protected T addToMap(int id, T element) throws ValidationException {
+    protected T addToMap(int id, T element){
         dataMap.put(id, element);
         log.info(element.toString());
         return element;
