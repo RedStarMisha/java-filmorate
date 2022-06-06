@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.controller;
 
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exceptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -13,7 +14,7 @@ public class UserController extends Controller<User> {
     @PostMapping
     @Override
     public User addNewElement(@RequestBody @Valid User element) {
-        element = userChecker(element);
+        element = usernameChecker(element);
         final User newUser = element.toBuilder()
                 .id(setId())
                 .build();
@@ -23,7 +24,7 @@ public class UserController extends Controller<User> {
     @PutMapping
     @Override
     public User updateElement(@RequestBody User element) throws ValidationException {
-        element = userChecker(element);
+        element = usernameChecker(element);
         userIdChecker(element);
         return super.addToMap(element.getId(), element);
     }
@@ -34,8 +35,8 @@ public class UserController extends Controller<User> {
         }
     }
 
-    private User userChecker(User user) {
-        if (user.getName() == null || user.getName().isBlank()) {
+    private User usernameChecker(User user) {
+        if (!StringUtils.hasText(user.getName())) {
             return user.toBuilder()
                     .name(user.getLogin())
                     .build();
