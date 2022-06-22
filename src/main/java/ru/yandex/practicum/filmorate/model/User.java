@@ -16,7 +16,6 @@ import java.util.Set;
 public class User {
     @Getter
     @Setter
-    @PositiveOrZero
     @Max(Long.MAX_VALUE)
     private long id;
 
@@ -44,5 +43,20 @@ public class User {
             throw new UsersIsNotFriendsException(this.id, friendId);
         }
         friendsId.remove(friendId);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        User user = (User) o;
+
+        return id == user.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
     }
 }
