@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import ru.yandex.practicum.filmorate.exceptions.UsersIsNotFriendsException;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
@@ -16,7 +17,7 @@ public class User {
     @Getter
     @Setter
     @PositiveOrZero
-    @Max(Integer.MAX_VALUE)
+    @Max(Long.MAX_VALUE)
     private long id;
 
     @Email
@@ -36,5 +37,12 @@ public class User {
 
     public void addFriend(long id) {
         friendsId.add(id);
+    }
+
+    public void deleteFriend(long friendId) {
+        if (!friendsId.contains(friendId)) {
+            throw new UsersIsNotFriendsException(this.id, friendId);
+        }
+        friendsId.remove(friendId);
     }
 }

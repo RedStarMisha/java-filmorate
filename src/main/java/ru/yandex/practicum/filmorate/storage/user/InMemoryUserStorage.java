@@ -2,7 +2,8 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.ElementIsNotExisting;
+import org.springframework.util.StringUtils;
+import ru.yandex.practicum.filmorate.exceptions.UserIsNotExistingException;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.*;
@@ -14,42 +15,57 @@ public class InMemoryUserStorage implements UserStorage{
     private long id = 1;
 
     @Override
-    public User addUser(User user) {
-        user.setId(setId());
+    public User add(User user) {
+        user = usernameChecker(user);
+        user.setId(setUserId());
         users.put(user.getId(), user);
-        log.info("Пользователь добавлен");
+        log.info(String.format("Пользователь %s с id = %d добавлен", user.getLogin(), user.getId()));
         return user;
     }
 
     @Override
-    public User updateUser(User user) {
-        return null;
+    public User update(User user) {
+        userExistingChecker(user.getId());
+        user = usernameChecker(user);
+        users.put(user.getId(), user);
+        log.info(String.format("Пользователь %s с id = %d обновлен", user.getLogin(), user.getId()));
+        return user;
     }
 
     @Override
-    public void deleteUser(long id) {
+    public void delete(long id) {
         userExistingChecker(id);
         users.remove(id);
+        log.info(String.format("Пользователь с id = %d удален", id));
     }
 
     @Override
-    public User getUserById(long id) {
+    public User getById(long id)  {
         userExistingChecker(id);
         return users.get(id);
     }
 
     @Override
-    public Set<User> getUsers() {
+    public Set<User> getAll() {
         return new HashSet<>(users.values());
     }
 
-    private long setId(){
+    private long setUserId(){
         return id++;
     }
 
-    private void userExistingChecker(long id) {
+    public void userExistingChecker(long id) {
         if (!users.containsKey(id)) {
-            throw new ElementIsNotExisting(String.format("Пользователя c id = %d не существует", id));
+            throw new UserIsNotExistingException(String.format("Пользователя c id = %d не существует", id));
         }
+    }
+
+    private User usernameChecker(User user) {
+        if (!StringUtils.hasText(user.getName())) {
+            user = user.toBuilder()
+                    .name(user.getLogin())
+                    .build();
+        }
+        return user;
     }
 }

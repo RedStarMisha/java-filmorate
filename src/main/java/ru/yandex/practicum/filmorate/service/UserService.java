@@ -2,66 +2,57 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exceptions.ElementIsNotExisting;
 import ru.yandex.practicum.filmorate.exceptions.NoCommonFriendsException;
-import ru.yandex.practicum.filmorate.exceptions.UsersIsNotFriendsException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
 public class UserService {
-    InMemoryUserStorage userStorage;
+    UserStorage userStorage;
 
     @Autowired
-    public UserService(InMemoryUserStorage userStorage){
+    public UserService(UserStorage userStorage){
         this.userStorage = userStorage;
     }
 
-    public User addFriend(long userId, long friendId) throws ElementIsNotExisting {
-        User user = userStorage.getUserById(friendId);
+    public User addFriend(long userId, long friendId){
+        User user = userStorage.getById(friendId);
         user.addFriend(userId);
-        user = userStorage.getUserById(userId);
+        user = userStorage.getById(userId);
         user.addFriend(friendId);
         return user;
     }
 
-    public void deleteFriend(long userId, long friendId) throws ElementIsNotExisting {
-        User user = userStorage.getUserById(userId);
-        User friend = userStorage.getUserById(friendId);
-        if (!user.getFriendsId().contains(friendId)) {
-            throw new UsersIsNotFriendsException();
-        }
-        user.getFriendsId().remove(friendId);
-        friend.getFriendsId().remove(userId);
+    public void deleteFriend(long userId, long friendId) {
+        User user = userStorage.getById(userId);
+        User friend = userStorage.getById(friendId);
+        user.deleteFriend(friendId);
+        friend.deleteFriend(userId);
     }
 
     public Set<User> getUserFriends(long id) {
-        Set<Long> friends = userStorage.getUserById(id).getFriendsId();
+        Set<Long> friends = userStorage.getById(id).getFriendsId();
         if (friends == null) {
             return null;
         }
         return friends.stream()
-                .map(friendsId -> userStorage.getUserById(friendsId))
+                .map(friendsId -> userStorage.getById(friendsId))
                 .collect(Collectors.toSet());
     }
 
     public Set<User> getCommonFriends(long userId, long otherId) {
-        Set<Long> userFriends = userStorage.getUserById(userId).getFriendsId();
-        Set<Long> otherFriends = userStorage.getUserById(otherId).getFriendsId();
+        Set<Long> userFriends = userStorage.getById(userId).getFriendsId();
+        Set<Long> otherFriends = userStorage.getById(otherId).getFriendsId();
         if (userFriends == null || otherFriends == null) {
-            throw new NoCommonFriendsException();
+            throw new NoCommonFriendsException(userId, otherId);
         }
-        Set<User> commonFriends = userFriends.stream()
+        return userFriends.stream()
                 .filter(fr -> otherFriends.contains(fr))
-                .map(id -> userStorage.getUserById(id))
+                .map(id -> userStorage.getById(id))
                 .collect(Collectors.toSet());
-        if (!commonFriends.isEmpty()) {
-            return commonFriends;
-        } else {
-            throw new NoCommonFriendsException();
-        }
     }
 }

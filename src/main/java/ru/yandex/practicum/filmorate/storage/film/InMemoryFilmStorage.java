@@ -1,32 +1,59 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import ru.yandex.practicum.filmorate.exceptions.FilmIsNotExistingException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
 
+@Slf4j
 @Component
 public class InMemoryFilmStorage implements FilmStorage{
-    private final Map<Integer, Film> films = new HashMap<>();
+    private final Map<Long, Film> films = new HashMap<>();
     private long id = 1;
 
     @Override
-    public Film addFilm(Film film) {
-        return null;
+    public void delete(long id) {
+        filmExistingChecker(id);
+        log.info("Фильм " + films.get(id).getName() + " c id = " + id + " удален");
+        films.remove(id);
     }
 
     @Override
-    public Film updateFilm(Film film) {
-        return null;
+    public Film add(Film film) {
+        film.setId(setFilmId());
+        films.put(film.getId(), film);
+        log.info(String.format("Фильм %s c id = %d добавлен", film.getName(), film.getId()));
+        return film;
     }
 
     @Override
-    public List<Film> getFilms() {
-        return new ArrayList<>(films.values());
+    public Film update(Film film) {
+        filmExistingChecker(film.getId());
+        films.put(film.getId(), film);
+        log.info(String.format("Фильм %s c id = %d обновлен", film.getName(), film.getId()));
+        return film;
     }
 
+    @Override
+    public Set<Film> getAll() {
+        return new HashSet<>(films.values());
+    }
 
-//    private long setId(){
-//        return id++;
-//    }
+    @Override
+    public Film getById(long id) {
+        filmExistingChecker(id);
+        return films.get(id);
+    }
+
+    private long setFilmId(){
+        return id++;
+    }
+
+    private void filmExistingChecker(long id) {
+        if (!films.containsKey(id)) {
+            throw new FilmIsNotExistingException(String.format("Фильма c id = %d не существует", id));
+        }
+    }
 }
