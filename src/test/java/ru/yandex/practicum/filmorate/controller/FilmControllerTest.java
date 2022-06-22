@@ -2,6 +2,7 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exceptions.IncorrectParameterException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FilmService;
@@ -161,7 +162,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldGetMostPopularFilmsWithoutCountValue() {
+    void shouldGetMostPopularFilms() {
         filmStorage.add(f1);
         filmStorage.add(f2);
         filmStorage.add(f3);
@@ -177,5 +178,16 @@ class FilmControllerTest {
         List<Film> testPopularFilms = List.of(f3, f2);
         List<Film> popularFilms = controller.getMostPopularFilms(2L);
         assertEquals(testPopularFilms, popularFilms);
+    }
+
+    @Test
+    void shouldThrowExceptionWhenRequestPopularFilmsWithNegativeCountValue() {
+        filmStorage.add(f1);
+        userStorage.add(u1);
+        controller.addLikeToFilm( 1L, 1L);
+        IncorrectParameterException e = assertThrows(IncorrectParameterException.class,
+                () -> controller.getMostPopularFilms(-1L));
+        assertEquals(e.getParameter(), "count");
+
     }
 }
