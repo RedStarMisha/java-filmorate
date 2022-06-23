@@ -25,7 +25,7 @@ class UserControllerTest {
     void createController() {
         userStorage = new InMemoryUserStorage();
         userService = new UserService(userStorage);
-        controller = new UserController(userStorage, new UserService(userStorage));
+        controller = new UserController(new UserService(userStorage));
         u1 = User.builder()
                 .name("Петя")
                 .login("SexInstructor")
@@ -57,7 +57,7 @@ class UserControllerTest {
 
 
     @Test
-    void shouldUpdateUser() {
+    void shouldUpdateUser() throws UserIsNotExistingException {
         controller.addNewUser(u1);
         u2.setId(1);
         controller.updateUser(u2);
@@ -66,7 +66,7 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldAddFriend() {
+    void shouldAddFriend() throws UserIsNotExistingException {
         controller.addNewUser(u1);
         controller.addNewUser(u2);
         controller.addFriend(u1.getId(), u2.getId());
@@ -96,7 +96,7 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldGetUserFriends() {
+    void shouldGetUserFriends() throws UserIsNotExistingException {
         controller.addNewUser(u1);
         controller.addNewUser(u2);
         controller.addNewUser(u3);
@@ -107,7 +107,7 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldGetCommonFriends() {
+    void shouldGetCommonFriends() throws UserIsNotExistingException {
         controller.addNewUser(u1);
         controller.addNewUser(u2);
         controller.addNewUser(u3);
@@ -130,7 +130,7 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldGetUserById() {
+    void shouldGetUserById() throws UserIsNotExistingException {
         controller.addNewUser(u1);
         assertEquals(u1, controller.getUserById(1L));
     }
@@ -143,7 +143,7 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldDeleteUser() {
+    void shouldDeleteUser() throws UserIsNotExistingException {
         controller.addNewUser(u1);
         controller.addNewUser(u2);
         controller.addNewUser(u3);
@@ -153,7 +153,7 @@ class UserControllerTest {
     }
 
     @Test
-    void shouldDeleteUserFriend() {
+    void shouldDeleteUserFriend() throws UserIsNotExistingException {
         controller.addNewUser(u1);
         controller.addNewUser(u2);
         controller.addNewUser(u3);

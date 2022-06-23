@@ -2,7 +2,9 @@ package ru.yandex.practicum.filmorate.controller;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exceptions.FilmIsNotExistingException;
 import ru.yandex.practicum.filmorate.exceptions.IncorrectParameterException;
+import ru.yandex.practicum.filmorate.exceptions.UserIsNotExistingException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FilmService;
@@ -35,8 +37,7 @@ class FilmControllerTest {
     void createNewController() {
         filmStorage = new InMemoryFilmStorage();
         userStorage = new InMemoryUserStorage();
-        controller = new FilmController(filmStorage,
-                new FilmService(filmStorage, userStorage));
+        controller = new FilmController(new FilmService(filmStorage, userStorage));
         f1 = Film.builder()
                 .name("Green Mile")
                 .description("The cinema about big black guy have got a superforce")
@@ -76,7 +77,7 @@ class FilmControllerTest {
     }
 
     @Test
-    public void shouldCheckMyDateVilidatorWhenDateBeforeCinemaBirthday() {
+    public void shouldCheckMyDateValidatorWhenDateBeforeCinemaBirthday() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         javax.validation.Validator validator = factory.getValidator();
         Film newFilm = f1.toBuilder()
@@ -107,7 +108,7 @@ class FilmControllerTest {
         }
 
     @Test
-    void shouldUpdateFilm() {
+    void shouldUpdateFilm() throws FilmIsNotExistingException {
         controller.addNewFilm(f1);
         f2.setId(1);
         controller.updateFilm(f2);
@@ -116,7 +117,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldAddedLikeToFilm() {
+    void shouldAddedLikeToFilm() throws FilmIsNotExistingException, UserIsNotExistingException {
         filmStorage.add(f1);
         userStorage.add(u1);
         controller.addLikeToFilm(1L, 1L);
@@ -127,14 +128,14 @@ class FilmControllerTest {
 
 
     @Test
-    void shouldDeleteFilmWithIdOne() {
+    void shouldDeleteFilmWithIdOne() throws FilmIsNotExistingException, UserIsNotExistingException {
         filmStorage.add(f1);
         controller.deleteFilmData(1L, null);
         assertTrue(controller.getAllFilms().isEmpty());
     }
 
     @Test
-    void shouldDeleteLikeFromFilm() {
+    void shouldDeleteLikeFromFilm() throws FilmIsNotExistingException, UserIsNotExistingException {
         filmStorage.add(f1);
         userStorage.add(u1);
         userStorage.add(u2);
@@ -155,14 +156,14 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldGetFilmById() {
+    void shouldGetFilmById() throws FilmIsNotExistingException {
         controller.addNewFilm(f1);
         Film testFilm = controller.getFilmById(1L);
         assertEquals(testFilm, f1);
     }
 
     @Test
-    void shouldGetMostPopularFilms() {
+    void shouldGetMostPopularFilms() throws FilmIsNotExistingException, UserIsNotExistingException {
         filmStorage.add(f1);
         filmStorage.add(f2);
         filmStorage.add(f3);
@@ -181,7 +182,7 @@ class FilmControllerTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenRequestPopularFilmsWithNegativeCountValue() {
+    void shouldThrowExceptionWhenRequestPopularFilmsWithNegativeCountValue() throws FilmIsNotExistingException, UserIsNotExistingException {
         filmStorage.add(f1);
         userStorage.add(u1);
         controller.addLikeToFilm( 1L, 1L);

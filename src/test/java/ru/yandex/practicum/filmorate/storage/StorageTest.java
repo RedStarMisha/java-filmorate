@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.storage;
 
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.exceptions.EntityIsNotExistingException;
+import ru.yandex.practicum.filmorate.exceptions.FilmIsNotExistingException;
+import ru.yandex.practicum.filmorate.exceptions.UserIsNotExistingException;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -26,7 +28,7 @@ public class StorageTest<T> {
 
 
     @Test
-    void shouldDeleteIdOne() {
+    void shouldDeleteIdOne() throws FilmIsNotExistingException, UserIsNotExistingException {
         storage.add(t1);
         storage.add(t2);
         storage.delete(1);
@@ -49,7 +51,7 @@ public class StorageTest<T> {
     }
 
     @Test
-    void getByIdOne() {
+    void getByIdOne() throws FilmIsNotExistingException, UserIsNotExistingException {
         storage.add(t1);
         assertEquals(t1, storage.getById(1));
     }

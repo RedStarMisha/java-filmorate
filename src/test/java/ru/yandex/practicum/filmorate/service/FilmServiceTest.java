@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exceptions.FilmIsNotExistingException;
+import ru.yandex.practicum.filmorate.exceptions.UserIsNotExistingException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
@@ -76,14 +78,14 @@ class FilmServiceTest {
     }
 
     @Test
-    void shouldAddLikeFromUserIdOneToFilmIdTwo() {
+    void shouldAddLikeFromUserIdOneToFilmIdTwo() throws FilmIsNotExistingException, UserIsNotExistingException {
         filmService.addLikeToFilm(2, 1);
         assertEquals(1, filmStorage.getById(2).getIdUserWhoLikedSet().size());
         assertTrue(filmStorage.getById(2).getIdUserWhoLikedSet().contains(1L));
     }
 
     @Test
-    void shouldDeleteOneLikeFromFilmWithIdTwo() {
+    void shouldDeleteOneLikeFromFilmWithIdTwo() throws FilmIsNotExistingException, UserIsNotExistingException {
         filmService.addLikeToFilm(2,2);
         filmService.addLikeToFilm(2, 1);
         filmService.deleteLikeFromFilm(2, 1);
@@ -92,7 +94,7 @@ class FilmServiceTest {
     }
 
     @Test
-    void shouldGetPopularFilmsWithCountEqualsTwo() {
+    void shouldGetPopularFilmsWithCountEqualsTwo() throws FilmIsNotExistingException, UserIsNotExistingException {
         filmService.addLikeToFilm(1,1);
         filmService.addLikeToFilm(2,2);
         filmService.addLikeToFilm(2, 1);

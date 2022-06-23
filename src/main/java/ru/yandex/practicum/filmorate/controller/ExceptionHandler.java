@@ -10,7 +10,7 @@ public class ExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler({UserIsNotExistingException.class, FilmIsNotExistingException.class})
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionResponse entityIsNotExisting(RuntimeException e) {
+    public ExceptionResponse entityIsNotExisting(Exception e) {
         return new ExceptionResponse(e.getMessage());
     }
 

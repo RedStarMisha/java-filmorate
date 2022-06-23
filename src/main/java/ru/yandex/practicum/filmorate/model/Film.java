@@ -38,7 +38,7 @@ public class Film {
         idUserWhoLikedSet.add(userId);
     }
 
-    public void deleteLike(long userId) {
+    public void deleteLike(long userId) throws UserIsNotExistingException {
         if (!idUserWhoLikedSet.contains(userId)) {
             throw new UserIsNotExistingException(String.format("Пользователь с id = %d не ставил лайк", userId));
         }

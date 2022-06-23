@@ -2,6 +2,8 @@ package ru.yandex.practicum.filmorate.storage.user;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import ru.yandex.practicum.filmorate.exceptions.FilmIsNotExistingException;
+import ru.yandex.practicum.filmorate.exceptions.UserIsNotExistingException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.StorageTest;
 
@@ -45,7 +47,7 @@ class InMemoryUserStorageTest extends StorageTest<User> {
     }
 
     @Test
-    void shouldSetLoginInsteadEmptyNameAfterAdd() {
+    void shouldSetLoginInsteadEmptyNameAfterAdd() throws FilmIsNotExistingException, UserIsNotExistingException {
         t1 = t1.toBuilder()
                 .name("")
                 .build();
@@ -54,7 +56,7 @@ class InMemoryUserStorageTest extends StorageTest<User> {
     }
 
     @Test
-    void shouldSetLoginInsteadNullNameAfterAdd() {
+    void shouldSetLoginInsteadNullNameAfterAdd() throws FilmIsNotExistingException, UserIsNotExistingException {
         t1 = t1.toBuilder()
                 .name(null)
                 .build();
@@ -63,7 +65,7 @@ class InMemoryUserStorageTest extends StorageTest<User> {
     }
 
     @Test
-    void shouldSetLoginInsteadEmptyNameAfterUpdate() {
+    void shouldSetLoginInsteadEmptyNameAfterUpdate() throws FilmIsNotExistingException, UserIsNotExistingException {
         storage.add(t1);
         t1 = t1.toBuilder()
                 .name("")

@@ -14,7 +14,7 @@ public class InMemoryFilmStorage implements FilmStorage{
     private long id = 1;
 
     @Override
-    public void delete(long id) {
+    public void delete(long id) throws FilmIsNotExistingException {
         filmExistingChecker(id);
         log.info("Фильм " + films.get(id).getName() + " c id = " + id + " удален");
         films.remove(id);
@@ -29,7 +29,7 @@ public class InMemoryFilmStorage implements FilmStorage{
     }
 
     @Override
-    public Film update(Film film) {
+    public Film update(Film film) throws FilmIsNotExistingException {
         filmExistingChecker(film.getId());
         films.put(film.getId(), film);
         log.info(String.format("Фильм %s c id = %d обновлен", film.getName(), film.getId()));
@@ -42,7 +42,7 @@ public class InMemoryFilmStorage implements FilmStorage{
     }
 
     @Override
-    public Film getById(long id) {
+    public Film getById(long id) throws FilmIsNotExistingException {
         filmExistingChecker(id);
         return films.get(id);
     }
@@ -51,7 +51,7 @@ public class InMemoryFilmStorage implements FilmStorage{
         return id++;
     }
 
-    private void filmExistingChecker(long id) {
+    private void filmExistingChecker(long id) throws FilmIsNotExistingException {
         if (!films.containsKey(id)) {
             throw new FilmIsNotExistingException(String.format("Фильма c id = %d не существует", id));
         }

@@ -16,7 +16,6 @@ public class InMemoryUserStorage implements UserStorage{
 
     @Override
     public User add(User user) {
-        user = usernameChecker(user);
         user.setId(setUserId());
         users.put(user.getId(), user);
         log.info(String.format("Пользователь %s с id = %d добавлен", user.getLogin(), user.getId()));
@@ -24,23 +23,22 @@ public class InMemoryUserStorage implements UserStorage{
     }
 
     @Override
-    public User update(User user) {
+    public User update(User user) throws UserIsNotExistingException {
         userExistingChecker(user.getId());
-        user = usernameChecker(user);
         users.put(user.getId(), user);
         log.info(String.format("Пользователь %s с id = %d обновлен", user.getLogin(), user.getId()));
         return user;
     }
 
     @Override
-    public void delete(long id) {
+    public void delete(long id) throws UserIsNotExistingException {
         userExistingChecker(id);
         users.remove(id);
         log.info(String.format("Пользователь с id = %d удален", id));
     }
 
     @Override
-    public User getById(long id)  {
+    public User getById(long id) throws UserIsNotExistingException {
         userExistingChecker(id);
         return users.get(id);
     }
@@ -54,18 +52,9 @@ public class InMemoryUserStorage implements UserStorage{
         return id++;
     }
 
-    public void userExistingChecker(long id) {
+    public void userExistingChecker(long id) throws UserIsNotExistingException {
         if (!users.containsKey(id)) {
             throw new UserIsNotExistingException(String.format("Пользователя c id = %d не существует", id));
         }
-    }
-
-    private User usernameChecker(User user) {
-        if (!StringUtils.hasText(user.getName())) {
-            user = user.toBuilder()
-                    .name(user.getLogin())
-                    .build();
-        }
-        return user;
     }
 }
