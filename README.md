@@ -7,7 +7,7 @@ Genre {
     int genre_id PK
     String description
     }
-
+Film_Genre 0}--|| Genre : set
 Film_Genre {
     int film_id PK
     int genre_id PK
