@@ -12,5 +12,5 @@ Film_Genre {
     int film_id PK
     int genre_id PK
     }
-    Film_Genre o}--|| Genre : set
+    Film_Genre 0}--|| Genre : set
 ```
