@@ -12,7 +12,13 @@ Genre {
     int genre_id PK
     String description
     }
-
+Film {
+    int film_id
+    String name
+    String description
+    int duration
+    Date date
+    }
 
 
 ```
