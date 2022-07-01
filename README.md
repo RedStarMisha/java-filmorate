@@ -39,4 +39,4 @@ Film_Respect {
     int friends_id PK
     }
 ```
-![This is an image](https://github.com/RedStarMisha/java-filmorate/tree/add-friends-likes/src/main/resources/scheme.png)
+![This is an image](https://github.com/RedStarMisha/java-filmorate/tree/add-friends-likes/src/main/resources/scheme.png?raw=true)
