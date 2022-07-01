@@ -31,6 +31,10 @@ public class Film {
     @Max(2400)
     private final long duration;
 
+    private final Set<FilmGenre> genre;
+
+    private final Set<RatingMPA> filmRating;
+
     @Getter
     private final Set<Long> idUserWhoLikedSet = new HashSet<>();
 
