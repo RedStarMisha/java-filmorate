@@ -7,4 +7,8 @@ Genre {
     int genre_id PK
     String description
     }
+Film_Genre {
+    int film_id PK
+    genre_id PK
+    }
 ```
