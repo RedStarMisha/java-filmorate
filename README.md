@@ -39,3 +39,4 @@ Film_Respect {
     int friends_id PK
     }
 ```
+![This is an image](scr/main/resources/scheme.png)
