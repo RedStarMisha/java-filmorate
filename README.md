@@ -12,7 +12,7 @@ Genre {
     int genre_id PK
     String description
     }
-    Film ||--o{ Film_Genre : 
+    Film ||--o{ Film_Genre : set
 Film {
     int film_id
     String name
