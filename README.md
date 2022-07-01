@@ -20,12 +20,12 @@ Film {
     int duration
     Date date
     }
-    Film ||--o{ Film_Respect:set film id
+    Film ||--o{ Film_Respect:setFilmId
 Film_Respect {
     int film_id PK
     int user_id PK
     }
-    Film_Respect ||--o{ User : set user ID
+    Film_Respect ||--o{ User : setUserId
     User {
     int user_id PK
     String email
@@ -33,7 +33,7 @@ Film_Respect {
     String name
     Date birthday
     }
-    User ||--o{ Friends : set user and friend ID
+    User ||--o{ Friends : setUserAndFriendId
     Friends {
     int user_id PK
     int friends_id PK
