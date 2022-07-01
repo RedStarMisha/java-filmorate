@@ -1,46 +1,67 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import org.springframework.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.ValidationException;
+import ru.yandex.practicum.filmorate.exceptions.UserIsNotExistingException;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import javax.validation.Valid;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/users")
-public class UserController extends Controller<User> {
+public class UserController {
+    UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @PostMapping
-    @Override
-    public User addNewElement(@RequestBody @Valid User element) {
-        element = usernameChecker(element);
-        final User newUser = element.toBuilder()
-                .id(setId())
-                .build();
-        return super.addToMap(newUser.getId(), newUser);
+    public User addNewUser(@RequestBody @Valid User user) {
+        return userService.addUser(user);
     }
 
     @PutMapping
-    @Override
-    public User updateElement(@RequestBody User element) throws ValidationException {
-        element = usernameChecker(element);
-        userIdChecker(element);
-        return super.addToMap(element.getId(), element);
+    public User updateUser(@RequestBody @Valid User user) throws UserIsNotExistingException {
+        return userService.updateUser(user);
     }
 
-    private void userIdChecker(User user) throws ValidationException {
-        if (user.getId() < 1) {
-            throw new ValidationException("id пользователя должен быть больше 1");
-        }
+    @PutMapping("/{id}/friends/{friendId}")
+    public void addFriend(@PathVariable(required = false) Long id,
+                           @PathVariable(required = false) Long friendId) throws UserIsNotExistingException {
+        userService.addFriend(id, friendId);
     }
 
-    private User usernameChecker(User user) {
-        if (!StringUtils.hasText(user.getName())) {
-            return user.toBuilder()
-                    .name(user.getLogin())
-                    .build();
+    @GetMapping
+    public Set<User> getAllUser() {
+        return userService.getAllUsers();
+    }
+
+    @GetMapping({"/{id}/friends", "/{id}/friends/common/{otherId}"})
+    public Set<User> getFriends(@PathVariable(value = "id") Long id,
+                                @PathVariable(value = "otherId", required = false) Long otherId) throws UserIsNotExistingException {
+        if (otherId == null) {
+            return userService.getUserFriends(id);
         }
-        return user;
+        return userService.getCommonFriends(id, otherId);
+    }
+
+    @GetMapping("/{id}")
+    public User getUserById(@PathVariable Long id) throws UserIsNotExistingException {
+        return userService.getUserById(id);
+    }
+
+    @DeleteMapping({"/{id}/friends/{friendsId}", "/{id}"})
+    public void delete(@PathVariable("id") Long userId,
+                       @PathVariable(value = "friendsId", required = false) Long friendsId) throws UserIsNotExistingException {
+        if (friendsId == null) {
+            userService.deleteUser(userId);
+            return;
+        }
+        userService.deleteFriend(userId, friendsId);
     }
 }
