@@ -7,12 +7,16 @@ Film_Genre {
     int film_id PK
     int genre_id PK
     }
-    Film_Genre }o--o{ Genre : set
+    
+Film_Genre }o--o{ Genre : set
+    
 Genre {
     int genre_id PK
     String description
     }
-    Film ||--o{ Film_Genre : set
+    
+Film ||--o{ Film_Genre : set
+    
 Film {
     int film_id PK
     String name
@@ -20,23 +24,45 @@ Film {
     int duration
     Date date
     }
-    Film ||--o{ Film_Respect:setFilmId
+    
+Film ||--|| Film_Rating : setFilmId
+    
+Film_Rating {
+    int film_id
+    int rating_id
+    }
+    
+    Film_Rating ||--|| RatingMPI : setRatingId
+    
+    
+RatingMPI {
+    int rating_id
+    String description
+    }
+    
+Film ||--o{ Film_Respect:setFilmId
+    
 Film_Respect {
     int film_id PK
     int user_id PK
     }
-    Film_Respect ||--o{ User : setUserId
-    User {
+    
+Film_Respect ||--o{ User : setUserId
+    
+User {
     int user_id PK
     String email
     String login
     String name
     Date birthday
     }
-    User ||--o{ Friends : setUserAndFriendId
-    Friends {
+    
+User ||--o{ Friends : setUserAndFriendId
+    
+Friends {
     int user_id PK
     int friends_id PK
+    String confirm
     }
 ```
 ![This is an image](https://github.com/RedStarMisha/java-filmorate/tree/add-friends-likes/src/main/resources/scheme.png?raw=true)
