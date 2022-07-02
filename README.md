@@ -68,7 +68,7 @@ Friends {
 ![This is an image](https://github.com/RedStarMisha/java-filmorate/tree/add-friends-likes/src/main/resources/scheme.png?raw=true)
 
 ```markdown
-#получение списка друзей
+#получение списка общих друзей
 SELECT friends_id 
 FROM Friends  
 WHERE user_id=1 OR user_id=3 GROUP BY friends_id 
