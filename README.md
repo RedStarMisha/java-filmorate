@@ -33,7 +33,7 @@ Film_Respect {
     int user_id PK
     }
     
-Film_Respect ||--o{ User : setUserId
+Film_Respect }o--|| User : setUserId
     
 User {
     int user_id PK
