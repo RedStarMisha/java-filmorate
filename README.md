@@ -23,21 +23,7 @@ Film {
     String description
     int duration
     Date date
-    }
-    
-Film ||--|| Film_Rating : setFilmId
-    
-Film_Rating {
-    int film_id
-    int rating_id
-    }
-    
-    Film_Rating ||--|| RatingMPI : setRatingId
-    
-    
-RatingMPI {
-    int rating_id
-    String description
+    String ratingMPI
     }
     
 Film ||--o{ Film_Respect:setFilmId
