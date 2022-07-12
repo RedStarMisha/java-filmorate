@@ -8,7 +8,9 @@ import ru.yandex.practicum.filmorate.exceptions.UsersIsNotFriendsException;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @Data
@@ -33,6 +35,8 @@ public class User {
     private final LocalDate birthday;
 
     private final Set<Long> friendsId = new HashSet<>();
+    private final Map<Long, Boolean> friendsStatus = new HashMap<>();
+
 
     public void addFriend(long id) {
         friendsId.add(id);
