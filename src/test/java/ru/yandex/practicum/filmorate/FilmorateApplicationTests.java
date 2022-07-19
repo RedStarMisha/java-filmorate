@@ -83,7 +83,7 @@ class FilmorateApplicationTests {
 				.description("Duis in consequat esse")
 				.duration(100)
 				.releaseDate(LocalDate.of(1979,04,17))
-				.genres(Set.of(new Genre(1, "Комедия")))
+				.genres(List.of(new Genre(1, "Комедия")))
 				.mpa(new Rating(5, "NC-17"))
 				.build();
 		testFilm2 =  Film.builder()
@@ -91,7 +91,7 @@ class FilmorateApplicationTests {
 				.description("The cinema about black man")
 				.duration(120)
 				.releaseDate(LocalDate.of(1993,04,17))
-				.genres(Set.of(new Genre(2, "Драма")))
+				.genres(List.of(new Genre(2, "Драма")))
 				.mpa(new Rating(5, "NC-17"))
 				.build();
 		testFilm3 =  Film.builder()
@@ -99,7 +99,7 @@ class FilmorateApplicationTests {
 				.description("Rise of the Machines")
 				.duration(120)
 				.releaseDate(LocalDate.of(1991,04,17))
-				.genres(Set.of(new Genre(6, "Боевик")))
+				.genres(List.of(new Genre(6, "Боевик")))
 				.mpa(new Rating(5, "NC-17"))
 				.build();
 	}
@@ -268,7 +268,7 @@ class FilmorateApplicationTests {
 	void shouldUpdateFilm() throws FilmIsNotExistingException, GenreIsNotExistingException, MPAIsNotExistingException {
 		filmStorage.add(testFilm1);
 		testFilm1.setDescription("superFilm");
-		testFilm1.setGenres(Set.of(new Genre(1, "Комедия"), new Genre(6, "Боевик")));
+		testFilm1.setGenres(List.of(new Genre(1, "Комедия"), new Genre(6, "Боевик")));
 		testFilm1.setId(1);
 		testFilm1.setMpa(new Rating(4, "R"));
 		filmStorage.update(testFilm1);
