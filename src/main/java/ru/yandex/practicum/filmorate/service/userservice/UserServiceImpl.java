@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
         try {
             return userStorage.getById(ind);
         } catch (UserIsNotExistingException e) {
-            e.printStackTrace();
+            log.warn("user с id = {} не существует", ind);
         }
         return null;
     };

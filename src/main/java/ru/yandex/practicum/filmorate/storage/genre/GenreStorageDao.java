@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.genre;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
@@ -8,7 +9,7 @@ import ru.yandex.practicum.filmorate.exceptions.notexist.GenreIsNotExistingExcep
 import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.List;
-
+@Slf4j
 @Component
 public class GenreStorageDao implements GenreStorage{
 
@@ -26,6 +27,7 @@ public class GenreStorageDao implements GenreStorage{
         if (rowSet.next()) {
             return new Genre(id, rowSet.getString("genre_name"));
         }
+        log.warn("genre с id = {} не существует", id);
         throw new GenreIsNotExistingException("Такого жанра нет");
     }
 

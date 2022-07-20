@@ -19,14 +19,6 @@ import java.util.function.Function;
 public class UserServiceBD implements UserService {
     UserStorage userStorage;
     private final FriendsStorage friendsStorage;
-    private final Function<Long, User> idToUserFunction = (ind) -> {
-        try {
-            return userStorage.getById(ind);
-        } catch (UserIsNotExistingException e) {
-            e.printStackTrace();
-        }
-        return null;
-    };
 
     @Autowired
     public UserServiceBD(UserStorage userStorage, FriendsStorage friendsStorage){

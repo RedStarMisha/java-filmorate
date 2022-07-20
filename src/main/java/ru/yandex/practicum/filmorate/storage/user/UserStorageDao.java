@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.user;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -19,7 +20,7 @@ import java.util.Set;
 
 import static ru.yandex.practicum.filmorate.storage.StorageUtil.checkUserById;
 import static ru.yandex.practicum.filmorate.storage.StorageUtil.userMaker;
-
+@Slf4j
 @Component
 public class UserStorageDao implements UserStorage{
     private final JdbcTemplate jdbcTemplate;
@@ -86,6 +87,7 @@ public class UserStorageDao implements UserStorage{
     private void checkUserOnExist(String login) throws UserAlreadyExistException {
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet("SELECT USER_LOGIN from USERS where USER_LOGIN=?", login);
         if (rowSet.next()) {
+            log.warn("user с login - {} уже существует", login);
             throw new UserAlreadyExistException(login);
         }
     }

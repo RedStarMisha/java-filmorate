@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import ru.yandex.practicum.filmorate.exceptions.notexist.FilmIsNotExistingException;
@@ -10,7 +11,7 @@ import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.List;
-
+@Slf4j
 public class StorageUtil {
 
     public static User userMaker(long userId, JdbcTemplate jdbcTemplate) {
@@ -50,6 +51,7 @@ public class StorageUtil {
     public static void checkUserById(long id, JdbcTemplate jdbcTemplate) throws UserIsNotExistingException {
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet("SELECT USER_ID from USERS where USER_ID=?", id);
         if (!rowSet.next()) {
+            log.warn("user с id = {} не существует", id);
             throw new UserIsNotExistingException(String.format("Пользователя c id = %d не существует", id));
         }
     }
@@ -57,6 +59,7 @@ public class StorageUtil {
     public static void checkFilmById(long id, JdbcTemplate jdbcTemplate) throws FilmIsNotExistingException {
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet("SELECT FILM_ID from FILMS where FILM_ID=?", id);
         if (!rowSet.next()) {
+            log.warn("film с id = {} не существует", id);
             throw new FilmIsNotExistingException(String.format("Фильм с id=%d не найден", id));
         }
     }

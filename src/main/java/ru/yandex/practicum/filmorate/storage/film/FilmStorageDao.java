@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 import static ru.yandex.practicum.filmorate.storage.StorageUtil.checkFilmById;
 import static ru.yandex.practicum.filmorate.storage.StorageUtil.filmMaker;
 
+@Slf4j
 @Component
 @AllArgsConstructor
 public class FilmStorageDao implements FilmStorage{
@@ -101,6 +103,7 @@ public class FilmStorageDao implements FilmStorage{
                 jdbcTemplate.update(sqlAddGenreToFilm, filmId, genre.getId());
                 continue;
             }
+            log.warn("Жанра с id = {} не существует", genre.getId());
             throw new GenreIsNotExistingException(String.format("Жанра с id = %d не существует", genre.getId()));
         }
         return makeGenre(filmId);

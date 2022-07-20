@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.mpa;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -7,7 +8,7 @@ import ru.yandex.practicum.filmorate.exceptions.notexist.MPAIsNotExistingExcepti
 import ru.yandex.practicum.filmorate.model.Rating;
 
 import java.util.List;
-
+@Slf4j
 @Component
 public class MpaStorageDao implements MpaStorage {
 
@@ -24,6 +25,7 @@ public class MpaStorageDao implements MpaStorage {
         if (rowSet.next()) {
             return new Rating(rowSet.getInt("RATING_ID"), rowSet.getString("RATING_DESCRIPTION"));
         }
+        log.warn("mpa с id = {} не существует", id);
         throw new MPAIsNotExistingException("Такого рейтинга нет");
     }
 
