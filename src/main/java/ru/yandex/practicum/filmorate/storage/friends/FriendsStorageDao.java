@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.notexist.UserIsNotExistingException;
-import ru.yandex.practicum.filmorate.storage.mpa.model.User;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.HashSet;
 import java.util.List;

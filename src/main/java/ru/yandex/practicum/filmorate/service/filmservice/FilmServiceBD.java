@@ -1,13 +1,13 @@
 package ru.yandex.practicum.filmorate.service.filmservice;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exceptions.notexist.FilmIsNotExistingException;
 import ru.yandex.practicum.filmorate.exceptions.notexist.GenreIsNotExistingException;
 import ru.yandex.practicum.filmorate.exceptions.notexist.MPAIsNotExistingException;
 import ru.yandex.practicum.filmorate.exceptions.notexist.UserIsNotExistingException;
-import ru.yandex.practicum.filmorate.storage.mpa.model.Film;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.filmsrating.FilmsRatingStorage;
 
@@ -17,16 +17,10 @@ import java.util.stream.Collectors;
 
 @Service
 @Qualifier("BD")
+@RequiredArgsConstructor //включает в себя @Autowired
 public class FilmServiceBD implements FilmService {
     private final FilmStorage filmStorage;
     private final FilmsRatingStorage filmsRating;
-
-    @Autowired
-    public FilmServiceBD(FilmStorage filmStorage, FilmsRatingStorage filmsRating) {
-        this.filmStorage = filmStorage;
-        this.filmsRating = filmsRating;
-    }
-
 
     public Film addFilm(Film film) throws MPAIsNotExistingException, GenreIsNotExistingException {
         return filmStorage.add(film);
@@ -58,14 +52,6 @@ public class FilmServiceBD implements FilmService {
     }
 
     public List<Film> getPopularFilms(long count) {
-        List<Long> popularityFilmsId = filmsRating.getPopularFilms(count);
-        return popularityFilmsId.stream().map(id-> {
-            try {
-                return getFilmById(id);
-            } catch (FilmIsNotExistingException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }).collect(Collectors.toList());
+        return filmsRating.getPopularFilms(count);
     }
 }

@@ -4,9 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import ru.yandex.practicum.filmorate.exceptions.NoCommonFriendsException;
 import ru.yandex.practicum.filmorate.exceptions.UserAlreadyExistException;
 import ru.yandex.practicum.filmorate.exceptions.notexist.UserIsNotExistingException;
-import ru.yandex.practicum.filmorate.storage.mpa.model.User;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.HashSet;
@@ -55,22 +56,21 @@ public class UserServiceImpl implements UserService {
 
     public User addFriend(long userId, long friendId) throws UserIsNotExistingException {
         User user = getUserById(userId);
-//        user.addFriend(userId);
-//        user = userStorage.getById(userId);
-//        user.addFriend(friendId);
+        user.addFriend(userId);
+        user = userStorage.getById(userId);
+        user.addFriend(friendId);
         return user;
     }
 
     public void deleteFriend(long userId, long friendId) throws UserIsNotExistingException {
-//        User user = userStorage.getById(userId);
-//        User friend = userStorage.getById(friendId);
-//        user.deleteFriend(friendId);
-//        friend.deleteFriend(userId);
+        User user = userStorage.getById(userId);
+        User friend = userStorage.getById(friendId);
+        user.deleteFriend(friendId);
+        friend.deleteFriend(userId);
     }
 
     public Set<User> getFriendsByUserId(long id) throws UserIsNotExistingException {
-        //Set<Long> friends = userStorage.getById(id).getFriendsId();
-        Set<Long> friends = new HashSet<>();
+        Set<Long> friends = userStorage.getById(id).getFriendsId();
         if (friends == null) {
             return null;
         }
@@ -88,16 +88,15 @@ public class UserServiceImpl implements UserService {
             }
             return null;
         };
-//        Set<Long> userFriends = userStorage.getById(userId).getFriendsId();
-//        Set<Long> otherFriends = userStorage.getById(otherId).getFriendsId();
-//        if (userFriends == null || otherFriends == null) {
-//            throw new NoCommonFriendsException(userId, otherId);
-//        }
-//        return userFriends.stream()
-//                .filter(fr -> otherFriends.contains(fr))
-//                .map(idToUserFunction)
-//                .collect(Collectors.toSet());
-        return null;
+        Set<Long> userFriends = userStorage.getById(userId).getFriendsId();
+        Set<Long> otherFriends = userStorage.getById(otherId).getFriendsId();
+        if (userFriends == null || otherFriends == null) {
+            throw new NoCommonFriendsException(userId, otherId);
+        }
+        return userFriends.stream()
+                .filter(fr -> otherFriends.contains(fr))
+                .map(idToUserFunction)
+                .collect(Collectors.toSet());
     }
 
     private User usernameChecker(User user) {

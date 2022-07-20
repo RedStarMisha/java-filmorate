@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.mpa.model;
+package ru.yandex.practicum.filmorate.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.genre;
 
 import ru.yandex.practicum.filmorate.exceptions.notexist.GenreIsNotExistingException;
-import ru.yandex.practicum.filmorate.storage.mpa.model.Genre;
+import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.List;
 

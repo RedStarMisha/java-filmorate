@@ -6,20 +6,25 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.notexist.FilmIsNotExistingException;
 import ru.yandex.practicum.filmorate.exceptions.notexist.UserIsNotExistingException;
+import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
+import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static ru.yandex.practicum.filmorate.storage.StorageUtil.checkFilmById;
-import static ru.yandex.practicum.filmorate.storage.StorageUtil.checkUserById;
+import static ru.yandex.practicum.filmorate.storage.StorageUtil.*;
 
 @Slf4j
 @Component
 public class FilmRatingStorageBD implements FilmsRatingStorage{
     private final JdbcTemplate jdbcTemplate;
 
+    private final FilmStorage filmStorage;
+
     @Autowired
-    public FilmRatingStorageBD(JdbcTemplate jdbcTemplate) {
+    public FilmRatingStorageBD(JdbcTemplate jdbcTemplate, FilmStorage filmStorage) {
         this.jdbcTemplate = jdbcTemplate;
+        this.filmStorage = filmStorage;
     }
 
     @Override
@@ -44,15 +49,15 @@ public class FilmRatingStorageBD implements FilmsRatingStorage{
     }
 
     @Override
-    public List<Long> getPopularFilms(long count) {
-        String sql = "select FILM_ID\n" +
-                "from FILM_RESPECT_FROM_USER\n" +
+    public List<Film> getPopularFilms(long count) {
+        String sql = "select FILM_ID from FILM_RESPECT_FROM_USER\n" +
                 "group by FILM_ID\n" +
                 "order by count(USER_ID) desc\n" +
-                "limit ?;";
-        List<Long> filmsId = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("film_id"),count);
-        return filmsId.isEmpty() ?
-                jdbcTemplate.query("SELECT film_id FROM FILMS", (rs, rowNum) -> rs.getLong("film_id")) :
-                filmsId;
+                "limit ?";
+        List<Film> popularFilms = jdbcTemplate.query(sql, (rs, rowNum) -> rs.getLong("film_id"),count).stream()
+                .map((id) -> filmMaker(id, jdbcTemplate)).collect(Collectors.toList());
+        List<Film> filmList = jdbcTemplate.query("SELECT film_id FROM FILMS", (rs, rowNum) -> rs.getLong("film_id"))
+                .stream().map((id) -> filmMaker(id, jdbcTemplate)).collect(Collectors.toList());
+        return popularFilms.isEmpty() ? filmList : popularFilms;
     }
 }

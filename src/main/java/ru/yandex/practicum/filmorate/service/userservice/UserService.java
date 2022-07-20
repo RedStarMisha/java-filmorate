@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.service.userservice;
 
 import ru.yandex.practicum.filmorate.exceptions.UserAlreadyExistException;
 import ru.yandex.practicum.filmorate.exceptions.notexist.UserIsNotExistingException;
-import ru.yandex.practicum.filmorate.storage.mpa.model.User;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Set;
 public interface UserService {

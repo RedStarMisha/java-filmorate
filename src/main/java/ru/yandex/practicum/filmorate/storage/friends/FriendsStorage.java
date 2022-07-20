@@ -1,7 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.friends;
 
 import ru.yandex.practicum.filmorate.exceptions.notexist.UserIsNotExistingException;
-import ru.yandex.practicum.filmorate.storage.mpa.model.User;
+import ru.yandex.practicum.filmorate.model.User;
 
 import java.util.Set;
 

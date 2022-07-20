@@ -7,7 +7,7 @@ import ru.yandex.practicum.filmorate.exceptions.notexist.FilmIsNotExistingExcept
 import ru.yandex.practicum.filmorate.exceptions.notexist.GenreIsNotExistingException;
 import ru.yandex.practicum.filmorate.exceptions.notexist.MPAIsNotExistingException;
 import ru.yandex.practicum.filmorate.exceptions.notexist.UserIsNotExistingException;
-import ru.yandex.practicum.filmorate.storage.mpa.model.Film;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.filmservice.FilmService;
 
 import javax.validation.Valid;

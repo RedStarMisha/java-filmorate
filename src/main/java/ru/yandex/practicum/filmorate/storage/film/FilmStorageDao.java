@@ -1,6 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -10,29 +10,25 @@ import ru.yandex.practicum.filmorate.exceptions.notexist.EntityIsNotExistingExce
 import ru.yandex.practicum.filmorate.exceptions.notexist.FilmIsNotExistingException;
 import ru.yandex.practicum.filmorate.exceptions.notexist.GenreIsNotExistingException;
 import ru.yandex.practicum.filmorate.exceptions.notexist.MPAIsNotExistingException;
-import ru.yandex.practicum.filmorate.storage.mpa.model.Film;
-import ru.yandex.practicum.filmorate.storage.mpa.model.Genre;
-import ru.yandex.practicum.filmorate.storage.mpa.model.Rating;
-import ru.yandex.practicum.filmorate.storage.genre.GenreStorage;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Rating;
 import ru.yandex.practicum.filmorate.storage.mpa.MpaStorage;
 
 import java.sql.*;
 import java.sql.Date;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static ru.yandex.practicum.filmorate.storage.StorageUtil.checkFilmById;
+import static ru.yandex.practicum.filmorate.storage.StorageUtil.filmMaker;
 
 @Component
+@AllArgsConstructor
 public class FilmStorageDao implements FilmStorage{
 
     private final MpaStorage mpaStorage;
     private final JdbcTemplate jdbcTemplate;
-
-    @Autowired
-    public FilmStorageDao(JdbcTemplate jdbcTemplate, MpaStorage mpaStorage, GenreStorage genreStorage) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.mpaStorage = mpaStorage;
-    }
 
 
     @Override
@@ -82,33 +78,14 @@ public class FilmStorageDao implements FilmStorage{
 
     @Override
     public Set<Film> getAll() {
-        String sqlGetAll = "SELECT films.*, r.RATING_DESCRIPTION FROM FILMS join RATING R on R.RATING_ID = FILMS.RATING_ID";
-        List<Film> films = jdbcTemplate.query(sqlGetAll, (rs, rowNum) -> {
-            try {
-                return makeFilm(rs);
-            } catch (EntityIsNotExistingException e) {
-                e.printStackTrace();
-            }
-            return null;
-        });
-        return new HashSet<>(films);
+        return jdbcTemplate.query("SELECT film_id FROM FILMS", (rs, rowNum) ->  rs.getLong("film_id"))
+                .stream().map(id -> filmMaker(id, jdbcTemplate)).collect(Collectors.toSet());
     }
-
-
 
     @Override
     public Film getById(long id) throws FilmIsNotExistingException {
         checkFilmById(id, jdbcTemplate);
-        String sqlGet = "SELECT films.*, r.RATING_DESCRIPTION FROM FILMS join RATING R on R.RATING_ID = FILMS.RATING_ID " +
-                "WHERE films.FILM_ID=?";
-        return jdbcTemplate.queryForObject(sqlGet, (rs, rowNum) -> {
-            try {
-                return makeFilm(rs);
-            } catch (EntityIsNotExistingException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }, id);
+        return filmMaker(id, jdbcTemplate);
     }
 
     private List<Genre> addFilmGenreToBase(List<Genre> genres, long filmId) throws GenreIsNotExistingException {
@@ -129,29 +106,8 @@ public class FilmStorageDao implements FilmStorage{
         return makeGenre(filmId);
     }
 
-    private Film makeFilm(ResultSet rs) throws SQLException, MPAIsNotExistingException, GenreIsNotExistingException {
-        Film film = Film.builder()
-                .id(rs.getInt("film_id"))
-                .name(rs.getString("film_name"))
-                .description(rs.getString("film_description"))
-                .duration(rs.getInt("film_duration"))
-                .releaseDate(rs.getDate("film_date").toLocalDate())
-                .genres(makeGenre(rs.getInt("film_id")))
-                .mpa(new Rating(rs.getInt("rating_id"), rs.getString("RATING_DESCRIPTION")))
-                .idUserWhoLikedSet(getLikes(rs.getInt("film_id")))
-                .build();
-        return film;
-    }
-
-    private Set<Long> getLikes(int rating_id) {
-        String sqlGetLikes = "SELECT * FROM FILM_RESPECT_FROM_USER where FILM_ID=?";
-        List<Long> likes = jdbcTemplate.query(sqlGetLikes, (rs, rowNum) -> rs.getLong("user_id"), rating_id);
-        return new HashSet<>(likes);
-    }
-
         private List<Genre> makeGenre(long film_id) {
-        String sqlGenre = "SELECT g.* FROM GENRE as G\n" +
-                "LEFT JOIN FILM_GENRE FG on G.GENRE_ID = FG.GENRE_ID\n" +
+        String sqlGenre = "SELECT g.* FROM GENRE as G LEFT JOIN FILM_GENRE FG on G.GENRE_ID = FG.GENRE_ID\n" +
                 "WHERE FILM_ID=?";
         return jdbcTemplate.query(sqlGenre, (rs, rowNum) ->
                         new Genre(rs.getInt("genre_id"), rs.getString("genre_name"))

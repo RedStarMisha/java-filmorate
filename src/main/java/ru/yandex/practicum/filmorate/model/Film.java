@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.mpa.model;
+package ru.yandex.practicum.filmorate.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
@@ -41,7 +41,7 @@ public class Film {
     private Rating mpa;
 
     @Getter
-    private Set<Long> idUserWhoLikedSet;
+    private List<Long> idUserWhoLikedSet;
 
     public void addLike(long userId) {
         idUserWhoLikedSet.add(userId);

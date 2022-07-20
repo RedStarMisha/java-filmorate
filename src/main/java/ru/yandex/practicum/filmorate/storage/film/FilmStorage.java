@@ -3,7 +3,7 @@ package ru.yandex.practicum.filmorate.storage.film;
 import ru.yandex.practicum.filmorate.exceptions.notexist.FilmIsNotExistingException;
 import ru.yandex.practicum.filmorate.exceptions.notexist.GenreIsNotExistingException;
 import ru.yandex.practicum.filmorate.exceptions.notexist.MPAIsNotExistingException;
-import ru.yandex.practicum.filmorate.storage.mpa.model.Film;
+import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.Storage;
 
 import java.util.Set;

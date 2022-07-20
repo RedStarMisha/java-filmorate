@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.storage.mpa.model;
+package ru.yandex.practicum.filmorate.model;
 
 import lombok.*;
 import ru.yandex.practicum.filmorate.exceptions.UsersIsNotFriendsException;
@@ -32,4 +32,10 @@ public class User {
     private LocalDate birthday;
 
     private Set<Long> friendsId;
+
+    public void deleteFriend(long friendId) {
+    }
+
+    public void addFriend(long friendId) {
+    }
 }

@@ -2,7 +2,7 @@ package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
 import ru.yandex.practicum.filmorate.exceptions.notexist.FilmIsNotExistingException;
-import ru.yandex.practicum.filmorate.storage.mpa.model.Film;
+import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
 

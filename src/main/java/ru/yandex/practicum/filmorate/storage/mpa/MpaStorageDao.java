@@ -4,7 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.notexist.MPAIsNotExistingException;
-import ru.yandex.practicum.filmorate.storage.mpa.model.Rating;
+import ru.yandex.practicum.filmorate.model.Rating;
 
 import java.util.List;
 

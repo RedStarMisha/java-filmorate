@@ -5,7 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exceptions.notexist.GenreIsNotExistingException;
-import ru.yandex.practicum.filmorate.storage.mpa.model.Genre;
+import ru.yandex.practicum.filmorate.model.Genre;
 
 import java.util.List;
 

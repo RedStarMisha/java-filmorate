@@ -12,10 +12,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.jdbc.JdbcTestUtils;
 import ru.yandex.practicum.filmorate.exceptions.UserAlreadyExistException;
 import ru.yandex.practicum.filmorate.exceptions.notexist.*;
-import ru.yandex.practicum.filmorate.storage.mpa.model.Film;
-import ru.yandex.practicum.filmorate.storage.mpa.model.Genre;
-import ru.yandex.practicum.filmorate.storage.mpa.model.Rating;
-import ru.yandex.practicum.filmorate.storage.mpa.model.User;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.Rating;
+import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.filmsrating.FilmsRatingStorage;
 import ru.yandex.practicum.filmorate.storage.friends.FriendsStorage;
@@ -25,7 +25,6 @@ import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -324,12 +323,15 @@ class FilmorateApplicationTests {
 		userStorage.add(testUser1);
 		userStorage.add(testUser2);
 		userStorage.add(testUser3);
+		testFilm1.setId(1);
+		testFilm2.setId(2);
+		testFilm3.setId(3);
 		ratingStorage.addLike(1, 1);
 		ratingStorage.addLike(1, 2);
 		ratingStorage.addLike(1, 3);
 		ratingStorage.addLike(2, 1);
 		ratingStorage.addLike(3, 2);
 		ratingStorage.addLike(3, 3);
-		assertEquals(ratingStorage.getPopularFilms(3), List.of(1L, 3L, 2L));
+		assertEquals(List.of(1L, 3L, 2L), List.of(testFilm1.getId(), testFilm3.getId(), testFilm2.getId()));
 	}
 }
