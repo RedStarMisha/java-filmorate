@@ -1,14 +1,12 @@
 package ru.yandex.practicum.filmorate.storage.film;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
-import ru.yandex.practicum.filmorate.exceptions.FilmIsNotExistingException;
+import ru.yandex.practicum.filmorate.exceptions.notexist.FilmIsNotExistingException;
 import ru.yandex.practicum.filmorate.model.Film;
 
 import java.util.*;
 
 @Slf4j
-@Component
 public class InMemoryFilmStorage implements FilmStorage{
     private final Map<Long, Film> films = new HashMap<>();
     private long id = 1;
@@ -46,6 +44,7 @@ public class InMemoryFilmStorage implements FilmStorage{
         filmExistingChecker(id);
         return films.get(id);
     }
+
 
     private long setFilmId(){
         return id++;

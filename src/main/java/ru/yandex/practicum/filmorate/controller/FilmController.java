@@ -1,17 +1,16 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.FilmIsNotExistingException;
-import ru.yandex.practicum.filmorate.exceptions.IncorrectParameterException;
-import ru.yandex.practicum.filmorate.exceptions.UserIsNotExistingException;
+import ru.yandex.practicum.filmorate.exceptions.notexist.FilmIsNotExistingException;
+import ru.yandex.practicum.filmorate.exceptions.notexist.GenreIsNotExistingException;
+import ru.yandex.practicum.filmorate.exceptions.notexist.MPAIsNotExistingException;
+import ru.yandex.practicum.filmorate.exceptions.notexist.UserIsNotExistingException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmService;
-import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.service.filmservice.FilmService;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -21,17 +20,17 @@ public class FilmController {
     private final FilmService filmService;
 
     @Autowired
-    public FilmController(FilmService filmService) {
+    public FilmController(@Qualifier("BD") FilmService filmService) {
         this.filmService = filmService;
     }
 
     @PostMapping
-    public Film addNewFilm(@RequestBody @Valid Film film) {
+    public Film addNewFilm(@RequestBody @Valid Film film) throws MPAIsNotExistingException, GenreIsNotExistingException {
         return filmService.addFilm(film);
     }
 
     @PutMapping()
-    public Film updateFilm(@RequestBody Film film) throws FilmIsNotExistingException {
+    public Film updateFilm(@RequestBody Film film) throws FilmIsNotExistingException, GenreIsNotExistingException {
             return filmService.updateFilm(film);
     }
 

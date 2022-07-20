@@ -1,16 +1,18 @@
 package ru.yandex.practicum.filmorate.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
-import ru.yandex.practicum.filmorate.exceptions.UserIsNotExistingException;
+import ru.yandex.practicum.filmorate.exceptions.notexist.UserIsNotExistingException;
 import ru.yandex.practicum.filmorate.myvalidator.Date;
 
 import javax.validation.constraints.*;
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
 @Builder(toBuilder = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Film {
     @Getter
     @Setter
@@ -18,25 +20,28 @@ public class Film {
     private long id;
 
     @NotEmpty
-    private final String name;
+    final String name;
 
     @NotEmpty
     @Size(max = 200)
-    private final String description;
+    private String description;
 
     @Date
-    private final LocalDate releaseDate;
+    private LocalDate releaseDate;
 
     @Positive
     @Max(2400)
-    private final long duration;
+    private long duration;
+    private List<Genre> genres;
 
-    private final Set<FilmGenre> genre;
 
-    private final Set<RatingMPA> filmRating;
+    @Setter
+    @Getter
+    @NotNull
+    private Rating mpa;
 
     @Getter
-    private final Set<Long> idUserWhoLikedSet = new HashSet<>();
+    private List<Long> idUserWhoLikedSet;
 
     public void addLike(long userId) {
         idUserWhoLikedSet.add(userId);

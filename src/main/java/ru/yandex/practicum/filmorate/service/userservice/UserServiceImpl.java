@@ -1,35 +1,38 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.service.userservice;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import ru.yandex.practicum.filmorate.exceptions.NoCommonFriendsException;
-import ru.yandex.practicum.filmorate.exceptions.UserIsNotExistingException;
+import ru.yandex.practicum.filmorate.exceptions.UserAlreadyExistException;
+import ru.yandex.practicum.filmorate.exceptions.notexist.UserIsNotExistingException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
-public class UserService {
+public class UserServiceImpl implements UserService {
     UserStorage userStorage;
     private final Function<Long, User> idToUserFunction = (ind) -> {
         try {
             return userStorage.getById(ind);
         } catch (UserIsNotExistingException e) {
-            e.printStackTrace();
+            log.warn("user с id = {} не существует", ind);
         }
         return null;
     };
 
     @Autowired
-    public UserService(UserStorage userStorage){
+    public UserServiceImpl(UserStorage userStorage) {
         this.userStorage = userStorage;
     }
 
-    public User addUser(User user) {
+    public User addUser(User user) throws UserAlreadyExistException {
         user = usernameChecker(user);
         return userStorage.add(user);
     }
@@ -52,7 +55,7 @@ public class UserService {
     }
 
     public User addFriend(long userId, long friendId) throws UserIsNotExistingException {
-        User user = userStorage.getById(friendId);
+        User user = getUserById(userId);
         user.addFriend(userId);
         user = userStorage.getById(userId);
         user.addFriend(friendId);
@@ -66,7 +69,7 @@ public class UserService {
         friend.deleteFriend(userId);
     }
 
-    public Set<User> getUserFriends(long id) throws UserIsNotExistingException {
+    public Set<User> getFriendsByUserId(long id) throws UserIsNotExistingException {
         Set<Long> friends = userStorage.getById(id).getFriendsId();
         if (friends == null) {
             return null;

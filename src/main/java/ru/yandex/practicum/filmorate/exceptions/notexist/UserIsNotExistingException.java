@@ -1,4 +1,4 @@
-package ru.yandex.practicum.filmorate.exceptions;
+package ru.yandex.practicum.filmorate.exceptions.notexist;
 
 public class UserIsNotExistingException extends EntityIsNotExistingException {
 

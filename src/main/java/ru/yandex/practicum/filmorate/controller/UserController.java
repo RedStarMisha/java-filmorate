@@ -1,11 +1,12 @@
 package ru.yandex.practicum.filmorate.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.filmorate.exceptions.UserIsNotExistingException;
+import ru.yandex.practicum.filmorate.exceptions.UserAlreadyExistException;
+import ru.yandex.practicum.filmorate.exceptions.notexist.UserIsNotExistingException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.storage.user.UserStorage;
+import ru.yandex.practicum.filmorate.service.userservice.UserService;
 
 import javax.validation.Valid;
 import java.util.Set;
@@ -13,15 +14,17 @@ import java.util.Set;
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
     UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+
+    public UserController(@Qualifier("BD") UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping
-    public User addNewUser(@RequestBody @Valid User user) {
+    public User addNewUser(@RequestBody @Valid User user) throws UserAlreadyExistException {
         return userService.addUser(user);
     }
 
@@ -31,8 +34,8 @@ public class UserController {
     }
 
     @PutMapping("/{id}/friends/{friendId}")
-    public void addFriend(@PathVariable(required = false) Long id,
-                           @PathVariable(required = false) Long friendId) throws UserIsNotExistingException {
+    public void addFriend(@PathVariable Long id,
+                           @PathVariable Long friendId) throws UserIsNotExistingException {
         userService.addFriend(id, friendId);
     }
 
@@ -45,7 +48,7 @@ public class UserController {
     public Set<User> getFriends(@PathVariable(value = "id") Long id,
                                 @PathVariable(value = "otherId", required = false) Long otherId) throws UserIsNotExistingException {
         if (otherId == null) {
-            return userService.getUserFriends(id);
+            return userService.getFriendsByUserId(id);
         }
         return userService.getCommonFriends(id, otherId);
     }

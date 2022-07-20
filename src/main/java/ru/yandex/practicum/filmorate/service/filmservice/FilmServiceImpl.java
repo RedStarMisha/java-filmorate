@@ -1,14 +1,14 @@
-package ru.yandex.practicum.filmorate.service;
+package ru.yandex.practicum.filmorate.service.filmservice;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.exceptions.FilmIsNotExistingException;
+import ru.yandex.practicum.filmorate.exceptions.notexist.FilmIsNotExistingException;
 import ru.yandex.practicum.filmorate.exceptions.IncorrectParameterException;
-import ru.yandex.practicum.filmorate.exceptions.UserIsNotExistingException;
+import ru.yandex.practicum.filmorate.exceptions.notexist.GenreIsNotExistingException;
+import ru.yandex.practicum.filmorate.exceptions.notexist.MPAIsNotExistingException;
+import ru.yandex.practicum.filmorate.exceptions.notexist.UserIsNotExistingException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.film.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.film.InMemoryFilmStorage;
-import ru.yandex.practicum.filmorate.storage.user.InMemoryUserStorage;
 import ru.yandex.practicum.filmorate.storage.user.UserStorage;
 
 import java.util.Comparator;
@@ -17,21 +17,22 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class FilmService {
+public class FilmServiceImpl implements FilmService {
+
     FilmStorage filmStorage;
     UserStorage userStorage;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+    public FilmServiceImpl(FilmStorage filmStorage, UserStorage userStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
     }
 
-    public Film addFilm(Film film) {
+    public Film addFilm(Film film) throws MPAIsNotExistingException, GenreIsNotExistingException {
         return filmStorage.add(film);
     }
 
-    public Film updateFilm(Film film) throws FilmIsNotExistingException {
+    public Film updateFilm(Film film) throws FilmIsNotExistingException, GenreIsNotExistingException {
         return filmStorage.update(film);
     }
 
